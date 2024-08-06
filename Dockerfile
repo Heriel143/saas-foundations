@@ -46,7 +46,8 @@ RUN pip install -r /tmp/requirements.txt
 # database isn't available during build
 # run any other commands that do not need the database
 # such as:
-# RUN python manage.py collectstatic --noinput
+RUN python manage.py vendor_pull
+RUN python manage.py collectstatic --noinput
 
 # set the Django default project name
 ARG PROJ_NAME="saashome"
@@ -59,7 +60,7 @@ RUN printf "#!/bin/bash\n" > ./paracord_runner.sh && \
     printf "python manage.py migrate --no-input\n" >> ./paracord_runner.sh && \
     printf "gunicorn ${PROJ_NAME}.wsgi:application --bind \"0.0.0.0:\$RUN_PORT\"\n" >> ./paracord_runner.sh
 
-# make the bash script executable
+# make the bash script executable 
 RUN chmod +x paracord_runner.sh
 
 # Clean up apt cache to reduce image size
